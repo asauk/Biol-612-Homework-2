@@ -18,15 +18,20 @@ Alternative hypothesis:There is a difference in the shrimp catches from 2009 and
 
 ```{r}
 Shrimp_data=read.csv("ASauk_H2_Scenario1_data.csv")
-par(mar=c(8.5,6.5,4.1,2.1), mgp=c(3,1,0))
-hist(Shrimp_data$X2009.catch, xlab = "Shrimp Catch (tonnes)", ylab = "Observed Frequency", col = c("light blue"), main = NULL, ylim = c(0,4)) 
-title(sub = "Fig. 1: Histogram of Shrimp catches in 2009", line=6, cex.sub=1.2)
 
-```
-```{r}
-par(mar=c(8.5,6.5,4.1,2.1), mgp=c(3,1,0))
-hist(Shrimp_data$X2010.catch, xlab = "Shrimp Catch (tonnes)", ylab = "Observed Frequency", col = c("orange"), main = NULL, ylim = c(0,4)) 
-title(sub = "Fig. 2: Histogram of Shrimp catches in 2010", line=6, cex.sub=1.2)
+library("reshape2")
+library("ggplot2")
+
+
+
+Sdf<-melt(Shrimp_data)
+colnames(Sdf)<-c('Site','Year', 'Catch')
+print(Sdf)
+Year<-Sdf$Year
+Catch=Sdf$Catch
+
+ggplot(Sdf, aes(x = Catch, fill=Year)) + geom_histogram(alpha = 0.3, position = 'identity') + labs(x = "Shrimp Catch (tonnes)", y ="Observed Frequency", title = "Fig. 1: Histogram of shrimp catches pre and post oil spill") + scale_color_manual(values=c("#3498DB","#F4D03F")) + scale_fill_manual(values=c("#3498DB","#F4D03F"))
+
 ```
 
 ```{r}
@@ -44,67 +49,137 @@ The data consists of shrimp catch values from 2009 and 2010 collected from the s
 
 ```{r}
 t.test(Shrimp_data$X2009.catch, Shrimp_data$X2010.catch, paired = TRUE)
-qt(0.95,13)
+qt(0.975,13)
 
 ```
 
 
 ##E) Test statistic
 
-The critical t-value for the paired t-test for this data is 1.77 and the observed t-test value is 6.38. 
+The critical t-value for the paired t-test for this data is 2.16 and the observed t-test value is 6.38. 
 
 ##F) Conclusion
 
-In conclusion, the observed t-value is greater than the critical t-value and p<0.05. Thus, there is a statistically significant difference between the mean shrimp catch in 2009 and in 2010 such that there was a significant decrease in the shrimp catches after the oil spill.
+In conclusion, the observed t-value is greater than the critical t-value and p<0.05 so we reject the null hypothesis. Thus, there is a statistically significant difference between the mean shrimp catch in 2009 and in 2010 such that there was a significant decrease in the shrimp catches after the oil spill.
 
 #Scenario 2
 
 ##A) Null and alternative hypotheses
 
-Null hypthosis:
+Null hypthosis: Phosphorous levels in Lake Erie are not different from the guideline level of 15 µg/L. 
 
-Alternative hypothesis:
+Alternative hypothesis: Phosphorous levels in Lake Erie are different from the guideline level of 15 µg/L. 
 
 
 ##B) Histogram
 
+```{r}
+Phosphorous_data=read.csv("ASauk_H2_Scenario2_data.csv")
+par(mar=c(8.5,6.5,4.1,2.1), mgp=c(3,1,0))
+hist(Phosphorous_data$Total.phosphorous, xlab = "Measured level of phosphorous (µg/L)", ylab = "Observed Frequency", col = c("light green"), main = NULL) 
+title(sub = "Fig. 4: Histogram of phosphorous levels in Lake Erie", line=6, cex.sub=1.2)
+```
+
+
 ##C) Hypothesis test
+
+The appropriate hypothesis test for this data is a one sample t-test as we are comparing observed data to a known value.
+
 
 ##D) Hypothesis test results
 
+```{r}
+t.test(Phosphorous_data$Total.phosphorous, mu=15)
+qt(0.975,9)
+```
+
+
 ##E) Test statistic
 
+The critical t-value for the one sample t-test for this data is 2.26 and the observed t-test value is 1.85.
+
 ##F) Conclusion
+
+In conclusion, the observed t-value is less than the critical t-value and p>0.05 so we cannot reject the null hypothesis. Thus, there is no statistically significant difference between the mean phosphorous level in Lake Erie and the guideline level of phosphorous.
 
 #Scenario 3
 
 ##A) Null and alternative hypotheses
 
-Null hypthosis:
+Null hypthosis: The two diets, carnivrous and vegetaarian, do not differ in terms of growth rate for the farmed salmon.
 
-Alternative hypothesis:
+Alternative hypothesis: The two diets, carnivrous and vegetaarian, do differ in terms of growth rate for the farmed salmon.
 
 
 ##B) Histogram
 
+```{r}
+library("reshape2")
+library("ggplot2")
+
+Carnivorous<-c(2.3,1.8,1.9,1.8,2.1,2.3,2,2.2,2.2,1.5,1.8,2.1,2.3,2.2,2.3)
+Vegetarian<-c(1.6,1.1,0.7,1,1,0.8,1.2,0.8,0.9,0.6,0.7,0.6,0.8,0.8,1.1)
+y_name<-'Growth.rate'
+x_name<-'Diet'
+
+df<-melt(data.frame(Carnivorous, Vegetarian))
+colnames(df)<-c(x_name, y_name)
+print(df)
+Diet<-df$Diet
+Growth.rate=df$Growth.rate
+
+ggplot(df, aes(Growth.rate, fill = Diet)) + geom_histogram(alpha = 0.5) + labs(x = "Growth rate of farmed salmon", y ="Observed Frequency", title = "Fig. 5: Histogram of growth rates of farmed salmon fed carnivorous diets")
+
+```
+
+
 ##C) Hypothesis test
+
+The appropriate hypothesis test for this data is a two sample t-test as we are comparing two independent groups.
 
 ##D) Hypothesis test results
 
+```{r}
+t.test(Carnivorous, Vegetarian)
+qt(0.975,27.834)
+```
+
+
 ##E) Test statistic
 
+The critical t-value for the one sample t-test for this data is 2.04 and the observed t-test value is 12.264.
+
 ##F) Conclusion
+
+In conclusion, the observed t-value is greater than the critical t-value and p<0.05 so we reject the null hypothesis. Thus, there is a statistically significant difference between the growth rates of farmed salmon fed carnivorous and vegetarian diets.
 
 #Scenario 4
 
 ##A) Null and alternative hypotheses
 
-Null hypthosis:
+Null hypthosis: There is no difference in PCB poisoning between trophic levels. 
 
-Alternative hypothesis:
+Alternative hypothesis:There is a difference in PCB poisoning between trophic levels. 
 
 
 ##B) Histogram
+
+```{r}
+PCB_data=read.csv("ASauk_H2_Scenario4_data.csv")
+
+
+library("ggplot2")
+
+PCB<-melt(PCB_data)
+colnames(PCB)<-c('Trophic.level','Effect')
+print(PCB)
+Diet<-df$Diet
+Growth.rate=df$Growth.rate
+
+ggplot(PCB_data, aes(x=))+geom_bar()
+title(sub = "Fig. 2: Histogram of Shrimp catches in 2010", line=6, cex.sub=1.2)
+```
+
 
 ##C) Hypothesis test
 
