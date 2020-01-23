@@ -9,9 +9,9 @@ output: html_document
 
 ##A) Null and alternative hypotheses
 
-Null hypthosis:There is no difference in the shrimp catches from 2009 and 2010.
+Null hypthosis: There is no difference in the shrimp catches from 2009 and 2010.
 
-Alternative hypothesis:There is a difference in the shrimp catches from 2009 and 2010.
+Alternative hypothesis: There is a difference in the shrimp catches from 2009 and 2010.
 
 
 ##B) Histogram
@@ -35,7 +35,7 @@ ggplot(Sdf, aes(x = Catch, fill=Year)) + geom_histogram(alpha = 0.3, position = 
 ```
 
 ```{r}
-par(mar=c(8.5,6.5,4.1,2.1), mgp=c(3,1,0))
+par(mar=c(8.5,6.5,4.1,3.1), mgp=c(3,1,0))
 
 diff<-Shrimp_data$Y2010 - Shrimp_data$Y2009
 diff
@@ -130,8 +130,8 @@ colnames(df)<-c(x_name, y_name)
 print(df)
 Diet<-df$Diet
 Growth.rate=df$Growth.rate
-
-ggplot(df, aes(Growth.rate, fill = Diet)) + geom_histogram(alpha = 0.5) + labs(x = "Growth rate of farmed salmon", y ="Observed Frequency", title = "Fig. 5: Histogram of growth rates of farmed salmon fed carnivorous diets")
+par(mar=c(8.5,6.5,4.1,4.1), mgp=c(3,1,0))
+ggplot(df, aes(Growth.rate, fill = Diet)) + geom_histogram(alpha = 0.5) + labs(x = "Growth rate of farmed salmon", y ="Observed Frequency", title = "Fig. 5: Histogram of growth rates of farmed salmon fed \n carnivorous and vegetarian diets")
 
 ```
 
@@ -154,7 +154,7 @@ The critical t-value for the one sample t-test for this data is 2.04 and the obs
 
 ##F) Conclusion
 
-In conclusion, the observed t-value is greater than the critical t-value and p<0.05 so we reject the null hypothesis. Thus, there is a statistically significant difference between the growth rates of farmed salmon fed carnivorous and vegetarian diets.
+In conclusion, the observed t-value is greater than the critical t-value and p<0.05 so we reject the null hypothesis. Thus, there is a statistically significant difference between the growth rates of farmed salmon fed carnivorous and those fed vegetarian diets.
 
 #Scenario 4
 
@@ -162,7 +162,7 @@ In conclusion, the observed t-value is greater than the critical t-value and p<0
 
 Null hypthosis: There is no difference in PCB poisoning between trophic levels. 
 
-Alternative hypothesis:There is a difference in PCB poisoning between trophic levels. 
+Alternative hypothesis: There is a difference in PCB poisoning between trophic levels. 
 
 
 ##B) Histogram
@@ -173,9 +173,10 @@ PCB_data=read.csv("ASauk_Homework2_Scenario4_data2.csv")
 
 library("ggplot2")
 
+Effect<-PCB_data$Effect
 
 
-ggplot(PCB_data, aes(x=PCB_data$Trophic.level, y=PCB_data$Individuals, fill = PCB_data$Effect))+geom_bar(stat="identity", position = position_dodge()) + labs(x = "Trophic Level", y = "Number of Individuals", title = "Fig. 6: Effects of PCBs on different trophic levels")
+ggplot(PCB_data, aes(x=PCB_data$Trophic.level, y=PCB_data$Individuals, fill = Effect))+geom_bar(stat="identity", position = position_dodge()) + labs(x = "Trophic Level", y = "Number of Individuals", title = "Fig. 6: Effects of PCBs on different trophic levels")
 
 ```
 
