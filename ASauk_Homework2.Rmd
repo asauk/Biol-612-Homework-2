@@ -36,7 +36,10 @@ ggplot(Sdf, aes(x = Catch, fill=Year)) + geom_histogram(alpha = 0.3, position = 
 
 ```{r}
 par(mar=c(8.5,6.5,4.1,2.1), mgp=c(3,1,0))
-hist(Shrimp_data$X2010.catch - Shrimp_data$X2009.catch, xlab = "Difference in Shrimp Catch (tonnes)", ylab = "Observed Frequency", col = c("red"), main = NULL, ylim = c(4,0))
+
+diff<-Shrimp_data$Y2010 - Shrimp_data$Y2009
+diff
+hist(diff, xlab = "Difference in Shrimp Catch (tonnes)", ylab = "Observed Frequency", col = c("red"), main = NULL, ylim = c(5,0))
 title(sub = "Fig. 3: Histogram of Change in Shrimp catches between 2009 and 2010", line=6, cex.sub=1.2)
 ```
 
@@ -48,7 +51,7 @@ The data consists of shrimp catch values from 2009 and 2010 collected from the s
 ##D) Hypothesis test results
 
 ```{r}
-t.test(Shrimp_data$X2009.catch, Shrimp_data$X2010.catch, paired = TRUE)
+t.test(Shrimp_data$Y2009, Shrimp_data$Y2010, paired = TRUE)
 qt(0.975,13)
 
 ```
@@ -165,26 +168,42 @@ Alternative hypothesis:There is a difference in PCB poisoning between trophic le
 ##B) Histogram
 
 ```{r}
-PCB_data=read.csv("ASauk_H2_Scenario4_data.csv")
+PCB_data=read.csv("ASauk_Homework2_Scenario4_data2.csv")
 
 
 library("ggplot2")
 
-PCB<-melt(PCB_data)
-colnames(PCB)<-c('Trophic.level','Effect')
-print(PCB)
-Diet<-df$Diet
-Growth.rate=df$Growth.rate
 
-ggplot(PCB_data, aes(x=))+geom_bar()
-title(sub = "Fig. 2: Histogram of Shrimp catches in 2010", line=6, cex.sub=1.2)
+
+ggplot(PCB_data, aes(x=PCB_data$Trophic.level, y=PCB_data$Individuals, fill = PCB_data$Effect))+geom_bar(stat="identity", position = position_dodge()) + labs(x = "Trophic Level", y = "Number of Individuals", title = "Fig. 6: Effects of PCBs on different trophic levels")
+
 ```
 
 
 ##C) Hypothesis test
 
+The appropriate hypothesis test for this data is a chi-squared test. 
+
 ##D) Hypothesis test results
+
+```{r}
+
+First<-c(133,100,17)
+Top<-c(4,61,35)
+
+dat=data.frame('First'=First, 'Top'=Top)
+
+chisq.test(dat)
+
+qchisq(0.95,2)
+
+```
+
 
 ##E) Test statistic
 
+The critical chi-squared value for the one sample t-test for this data is 5.99 and the observed chi-squared value is 89.253.
+
 ##F) Conclusion
+
+In conclusion, the observed chi-squared value is greater than the critical chi-squared and p<0.05 so we reject the null hypothesis. Thus, there is a statistically significant difference between the effects of PCBs on first trophic level organisms and top predators. 
